@@ -1,0 +1,47 @@
+function max (a,b : integer) : integer; 
+begin
+  if (a >= b) then 
+	max := a
+  else max := b
+end;
+
+function altura(A : arbol) : integer
+begin
+   if (a <> nil) then
+      altura := 1 + max( altura(a^.hi), altura(a^.hd) )
+   else
+      altura := 0;
+end;
+
+
+//INSERTAR ORDENADO VECTOR
+function determinarPos(x,diml:integer; v:vector):integer;
+var
+	 pos:integer;
+begin
+	 pos:=1;
+	 while (pos <=diml) and (x> v[pos])do
+		 pos:= pos+1;
+	 determinarPos:= pos;
+end;
+
+procedure insertar(var v:vector; var diml:integer; pos:integer; elem:tipoElemento);
+var
+	 i:integer;
+begin
+	 for i:=diml downto pos do
+		 v[i+1]:= v[i];
+	 v[pos]:= elem;
+	 diml:= diml+1;
+end;
+
+procedure insertarOrdenado(var v:vector; var diml:integer; elem:tipoElemento); 
+var
+	 pos:integer;
+begin
+	 if(diml < dimf) then begin
+		 pos:=determinarPos(elem,v,diml)
+		 Insertar(v,diml,pos,elem);
+	 end;
+end;
+
