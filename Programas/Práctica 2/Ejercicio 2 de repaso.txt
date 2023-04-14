@@ -1,0 +1,244 @@
+public abstract class Recital {
+    private String nombreBanda;
+    private String [] temas;
+    private int cantTotalTemas;
+    private int cantMaxTemas;
+    
+    public Recital(String nombreBanda, int cantTemas){
+        this.nombreBanda = nombreBanda;
+        this.cantMaxTemas = cantTemas;
+        this.temas = new String[cantTemas]; //5
+        this.cantTotalTemas = 0;
+    }
+    
+    public void setNombreBanda(String nombreBanda){
+        this.nombreBanda = nombreBanda;
+    }
+    
+    public String getNombreBanda(){
+        return this.nombreBanda;
+    }
+    
+    private boolean estaLlenoTemas(){
+        return this.cantTotalTemas == this.cantMaxTemas;
+    }
+    
+    public void agregarTema(String tema){
+        if (!estaLlenoTemas()){ //hecho asi porque no se si chequeo en p.p
+            this.temas[cantTotalTemas] = tema;
+            this.cantTotalTemas++;
+        } else {
+            System.out.println("Ya se llenaron los temas");
+        }
+    }
+    
+    public void actuar(){
+        for (int i = 0; i < this.cantTotalTemas; i++) {
+            System.out.println("y ahora tocaremos... " + this.temas[i]);
+        }
+    }
+    
+    public abstract boolean finalizado();
+    public abstract double calcularCosto();
+    
+}
+
+//////////////////
+
+public class EventoOcasional extends Recital{
+    private String motivo;
+    private String nombreContratante;
+    private Fecha diaEvento;
+    private boolean hecho;
+    
+    public EventoOcasional(String motivo, String nombreContratante, Fecha diaEvento, String nombreBanda, int cantTemas){
+        super(nombreBanda,cantTemas);
+        this.motivo = motivo;
+        this.nombreContratante = nombreContratante;
+        this.diaEvento = diaEvento;
+        this.hecho = false;
+    }
+    
+    @Override
+    public void actuar(){
+        if (this.motivo.equals("Show de beneficiencia")){
+            System.out.println("Recuerden colaborar con "+this.nombreContratante);
+        } else {
+            if (this.motivo.equals("Show de TV")){
+                System.out.println("Saludos amigos televidentes");
+            } else {
+                System.out.println("Un feliz cumpleaños para "+this.nombreContratante);
+            }
+        }
+        
+        super.actuar();
+        this.hecho = true;
+    }
+    
+    @Override
+    public boolean finalizado(){
+        return this.hecho;
+    }
+    
+    @Override
+    public double calcularCosto(){
+        //Si es un evento ocasional devuelve 0 si es a beneficio, 50000 si es un show de TV y 150000 si es privado.
+        if (this.motivo.equals("Show de beneficiencoa")){
+            return 0;
+        } else {
+            if (this.motivo.equals("Show de TV")){
+                return 50000;
+            } else {
+                return 150000;
+            }
+        }
+    }
+    
+    public void setMotivo(String motivo){
+        this.motivo = motivo;
+    }
+    
+    public String getMotivo(){
+        return this.motivo;
+    }
+    
+    public void setNombreContratante(String nombreContratante){
+        this.nombreContratante = nombreContratante;
+    }
+    
+    public String getNombreContratante(){
+        return this.nombreContratante;
+    }
+    
+    public void setDiaEvento(Fecha diaEvento){
+        this.diaEvento = diaEvento;
+    }
+    
+    public Fecha getDiaEvento(){
+        return this.diaEvento;
+    }
+    
+}
+
+/////
+
+public class Gira extends Recital{
+    private String nombreGira;
+    private Fecha [] fechas;
+    private int fechaActual;
+    private int cantTotalFechas;
+    private int cantMaxFechas;
+    
+    
+    public Gira(String nombreGira, int cantFechas, String nombreBanda, int cantTemas){
+        super(nombreBanda,cantTemas);
+        this.nombreGira = nombreGira;
+        this.fechas = new Fecha[cantFechas];
+        this.cantMaxFechas = cantFechas;
+        this.cantTotalFechas = 0;
+        this.fechaActual = 0;
+    }
+    
+    private boolean estaLlenoFechas(){
+        return this.cantTotalFechas == this.cantMaxFechas;
+    }
+    
+    @Override
+    public boolean finalizado(){
+        return this.fechaActual == this.cantMaxFechas;
+    }
+    
+    @Override
+    public double calcularCosto(){
+        return 30000 * this.cantMaxFechas;
+    }
+    
+    public void agregarFecha(Fecha f){
+        if (!estaLlenoFechas()){ //idem agregarTema()
+            this.fechas[cantTotalFechas] = f;
+            this.cantTotalFechas++;
+        } else {
+            System.out.println("Ya se completaron las fechas");
+        }
+    }
+    
+    @Override
+    public void actuar(){
+        if (this.fechaActual < this.cantTotalFechas){
+            System.out.println("Buenas noches "+this.fechas[this.fechaActual].getCiudad());
+            super.actuar();
+            this.fechaActual++;
+        } else {
+            System.out.println("La gira termino");
+        }
+    }
+    
+    public String getNombreGira() {
+        return nombreGira;
+    }
+
+    public void setNombreGira(String nombreGira) {
+        this.nombreGira = nombreGira;
+    }
+
+    public int getFechaActual() {
+        return fechaActual;
+    }
+
+//    public int setFechaActual(Fecha fechaActual) {
+//        this.fechaActual = fechaActual;
+//    }
+    
+    
+}
+
+
+/////
+
+
+public class Fecha { //solucion rebuscada
+    private int dia;
+    private int mes;
+    private int año;
+    private String ciudad;
+    
+    
+    public Fecha(int dia, int mes, int año, String ciudad){
+        this.dia = dia;
+        this.mes = mes;
+        this.año = año;
+        this.ciudad = ciudad;
+    }
+
+    public int getDia() {
+        return dia;
+    }
+
+    public void setDia(int dia) {
+        this.dia = dia;
+    }
+
+    public int getMes() {
+        return mes;
+    }
+
+    public void setMes(int mes) {
+        this.mes = mes;
+    }
+
+    public int getAño() {
+        return año;
+    }
+
+    public void setAño(int año) {
+        this.año = año;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }    
+}
