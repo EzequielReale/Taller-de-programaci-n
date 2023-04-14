@@ -1,0 +1,130 @@
+programa E4P3
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:= flores + 1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+  proceso maximo(E objetos:numero; E id:numero; ES max:numero; ES maxID:numero)
+  comenzar
+    si (objetos > max)
+      max:= objetos
+      maxID:= id
+  fin
+areas
+  avenida1: AreaP (10,12,40,12)
+  avenida2: AreaP (10,10,40,10)
+  avenida3: AreaP (10,8,40,8)
+  avenida4: AreaP (10,6,40,6)
+  reposo: AreaP (20,15,20,15)
+robots
+  robot florero
+  variables
+    id, flores, papeles, movimiento: numero
+  comenzar
+    flores:= 0
+    papeles:= 0
+    derecha
+    RecibirMensaje(id, robotJefe)
+    
+    repetir 24
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+
+    RecibirMensaje(movimiento, robotJefe)
+    mientras (PosAv < 40)
+      repetir movimiento
+        mover
+      juntarPapeles(papeles)
+
+    EnviarMensaje(id, robotJefe)
+    EnviarMensaje(flores, robotJefe)
+    EnviarMensaje(papeles, robotJefe)
+  fin
+  robot jefe
+  variables
+    movimiento, ganador, perdedores, objetos, max, maxID: numero
+  comenzar
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    EnviarMensaje(3, robot3)
+    EnviarMensaje(4, robot4)
+
+    Random(movimiento,1,3)
+    EnviarMensaje(movimiento, robot1)
+    Random(movimiento,1,3)
+    EnviarMensaje(movimiento, robot2)
+    Random(movimiento,1,3)
+    EnviarMensaje(movimiento, robot3)
+    Random(movimiento,1,3)
+    EnviarMensaje(movimiento, robot4)
+
+    RecibirMensaje(ganador, *)
+    si (ganador = 1)
+      RecibirMensaje(perdedores, robot2)
+      RecibirMensaje(perdedores, robot3)
+      RecibirMensaje(perdedores, robot4)
+    sino
+      si (ganador = 2)
+        RecibirMensaje(perdedores, robot1)
+        RecibirMensaje(perdedores, robot3)
+        RecibirMensaje(perdedores, robot4)
+      sino
+        si (ganador = 3)
+          RecibirMensaje(perdedores, robot1)
+          RecibirMensaje(perdedores, robot2)
+          RecibirMensaje(perdedores, robot4)
+        sino
+          RecibirMensaje(perdedores, robot1)
+          RecibirMensaje(perdedores, robot2)
+          RecibirMensaje(perdedores, robot3)
+    Informar('Primero', ganador)
+
+    max:= -1
+    RecibirMensaje(objetos, robot1)
+    maximo(objetos,1,max,maxID)
+    RecibirMensaje(objetos, robot2)
+    maximo(objetos,2,max,maxID)
+    RecibirMensaje(objetos, robot3)
+    maximo(objetos,3,max,maxID)
+    RecibirMensaje(objetos, robot4)
+    maximo(objetos,4,max,maxID)
+    Informar('Mas_flores', maxID)
+
+    max:= -1
+    RecibirMensaje(objetos, robot1)
+    maximo(objetos,1,max,maxID)
+    RecibirMensaje(objetos, robot2)
+    maximo(objetos,2,max,maxID)
+    RecibirMensaje(objetos, robot3)
+    maximo(objetos,3,max,maxID)
+    RecibirMensaje(objetos, robot4)
+    maximo(objetos,4,max,maxID)
+    Informar('Mas_papeles', maxID)
+  fin
+variables
+  robot1: florero
+  robot2: florero
+  robot3: florero
+  robot4: florero
+  robotJefe: jefe
+comenzar
+  AsignarArea (robot1, avenida1)
+  AsignarArea (robot2, avenida2)
+  AsignarArea (robot3, avenida3)
+  AsignarArea (robot4, avenida4)
+  AsignarArea (robotJefe, reposo)
+  Iniciar(robot1, 10, 12)
+  Iniciar(robot2, 10, 10)
+  Iniciar(robot3, 10, 8)
+  Iniciar(robot4, 10, 6)
+  Iniciar(robotJefe, 20, 15)
+fin

@@ -1,0 +1,138 @@
+program Perfumeria;
+Uses crt;
+type
+
+  venta = record
+    codPro : integer;
+    tipo : String[15];
+    fecha : String[15];
+    cantVen : integer;
+    monto : real;
+  end;
+
+  reg1 = record
+    fecha : String[15];
+    cantVen : integer;
+    monto : real;
+  end;
+
+  lista = ^nodo1;
+
+  nodo1 = record
+    dato : reg1;
+    sig : lista;
+  end;
+
+  reg2 = record
+    codPro : integer;
+    tipo : String[15];
+    ventas : lista;
+  end;
+
+  arbol = ^nodo2;
+
+  nodo2 = record
+    dato : reg2;
+    hi : arbol;
+    hd : arbol;
+  end;
+
+procedure leer(var v : venta);
+begin
+  write('Ingrese cantidad vendida ');
+  readln(v.cantVen);
+  if(v.cantVen <> -1) then begin
+    write('Ingrese codigo del  producto ');
+    readln(v.codPro);
+    write('Ingrese tipo ');
+    readln(v.tipo);
+    write('Ingrese fecha ');
+    readln(v.fecha);
+    write('Ingrese monto ');
+    readln(v.monto);
+  end;
+end;
+
+procedure agregarOrdenado(var l : lista; v : venta);
+var
+  aux, ant, act : lista;
+begin
+  new(aux);
+  aux^.dato.fecha := v.fecha;
+  aux^.dato.cantVen := v.cantVen;
+  aux^.dato.monto := v.monto;
+  act := l;
+  ant := l;
+  while(act <> nil) and (v.fecha > act^.dato.fecha) do begin
+    ant := act;
+    act := act^.sig;
+  end;
+  if(act = ant) then
+    l := aux
+  else
+    ant^.sig := aux;
+  aux^.sig := act;
+end;
+
+procedure crearArbol(var a : arbol; v : venta);
+begin
+  if(a = nil) then begin
+    new(a);
+    a^.dato.codPro := v.codPro;
+    a^.dato.tipo := v.tipo;
+    a^.dato.ventas := nil;
+    agregarOrdenado(a^.dato.ventas,v);
+  end
+  else
+    if(v.codPro < a^.dato.codPro) then
+      crearArbol(a^.hi,v)
+    else
+      if(v.codPro > a^.dato.codPro) then
+        crearArbol(a^.hd,v)
+      else
+        if(v.codPro = a^.dato.codPro) then
+          agregarOrdenado(a^.dato.ventas,v);
+end;
+
+
+procedure generarArbol(var a : arbol);
+var
+  v : venta;
+begin
+  leer(v);
+  while(v.cantVen <> -1) do begin
+    crearArbol(a,v);
+    leer(v);
+  end;
+end;
+
+procedure imprimirVentas(l : lista);
+begin
+  if(l <> nil) then begin
+    writeln('fecha: ',l^.dato.fecha,' cantidad vendida: ',l^.dato.cantVen,' monto ',l^.dato.monto:2:2);
+    imprimirVentas(l^.sig);
+  end;
+end;
+
+procedure inOrden(a : arbol);
+begin
+  if(a <> nil) then begin
+    inOrden(a^.hi);
+    writeln('codigo ',a^.dato.codPro,' tipo ',a^.dato.tipo);
+    imprimirVentas(a^.dato.ventas);
+    inOrden(a^.hd);
+  end;
+end;
+
+var
+  a : arbol;
+begin
+  clrscr;
+  a := nil;
+
+  generarArbol(a);
+
+  inOrden(a);
+
+  readln;
+end.

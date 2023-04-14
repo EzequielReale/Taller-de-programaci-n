@@ -1,0 +1,110 @@
+programa tresRobotsDobleRecorrido
+procesos
+  proceso juntarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:= flores + 1
+  fin
+  proceso minimo(E flores:numero;E id:numero ES min:numero; ES minID:numero)
+  comenzar
+    si (flores < min)
+      min:= flores
+      minID:= id
+  fin
+areas
+  avenida1: AreaP (5,1,5,10)
+  avenida2: AreaP (6,1,6,10)
+  avenida3: AreaP (7,1,7,10)
+  reposo: AreaP (1,1,1,1)
+robots
+  robot completo
+  variables
+    id, flores, av, ca: numero
+    segundaEtapa: boolean
+  comenzar
+    av:= PosAv
+    ca:= PosCa
+    flores:= 0
+    RecibirMensaje(id, robotJefe)
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+    EnviarMensaje(id, robotJefe)
+    EnviarMensaje(flores, robotJefe)
+    RecibirMensaje(segundaEtapa, robotJefe)
+    si (segundaEtapa)
+      Pos(av,ca)
+      repetir 9
+        juntarPapeles
+        mover
+      juntarPapeles
+      EnviarMensaje(id, robotJefe)
+  fin
+  
+  robot jefe
+  variables
+    id, flores, min, minID: numero
+    segundaEtapa: boolean
+  comenzar
+    min:= 999
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    EnviarMensaje(3, robot3)
+    
+    RecibirMensaje(id, robot1)
+    RecibirMensaje(flores, robot1)
+    minimo(flores,id,min,minID)
+    RecibirMensaje(id, robot2)
+    RecibirMensaje(flores, robot2)
+    minimo(flores,id,min,minID)
+    RecibirMensaje(id, robot3)
+    RecibirMensaje(flores, robot3)
+    minimo(flores,id,min,minID)
+    si (minID = 1)
+      segundaEtapa:= F
+      EnviarMensaje(segundaEtapa, robot1)
+      segundaEtapa:= V
+      EnviarMensaje(segundaEtapa, robot2)
+      EnviarMensaje(segundaEtapa, robot3)
+    sino
+      si (minID = 2)
+        segundaEtapa:= F
+        EnviarMensaje(segundaEtapa, robot2)
+        segundaEtapa:= V
+        EnviarMensaje(segundaEtapa, robot1)
+        EnviarMensaje(segundaEtapa, robot3)
+      sino
+        si (minID = 3)
+          segundaEtapa:= F
+          EnviarMensaje(segundaEtapa, robot3)
+          segundaEtapa:= V
+          EnviarMensaje(segundaEtapa, robot1)
+          EnviarMensaje(segundaEtapa, robot2)
+    RecibirMensaje(id, *)
+    Informar('Ganador', id)
+    RecibirMensaje(id, *)
+  fin
+  
+variables
+  robot1: completo
+  robot2: completo
+  robot3: completo
+  robotJefe: jefe
+comenzar
+  AsignarArea (robot1, avenida1)
+  AsignarArea (robot2, avenida2)
+  AsignarArea (robot3, avenida3)
+  AsignarArea (robotJefe, reposo)
+  Iniciar(robot1, 5, 1)
+  Iniciar(robot2, 6, 1)
+  Iniciar(robot3, 7, 1)
+  Iniciar(robotJefe, 1, 1)
+fin
+

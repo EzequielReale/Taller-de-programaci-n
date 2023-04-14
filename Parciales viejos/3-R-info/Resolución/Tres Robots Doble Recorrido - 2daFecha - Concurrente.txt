@@ -1,0 +1,99 @@
+programa Parcial2daFecha
+procesos
+  proceso juntarF(ES flores:numero) 
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:=flores + 1
+  fin
+  proceso juntarP (ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles:=papeles + 1
+  fin  
+  
+areas 
+  area1 : AreaP(5,1,5,10)
+  area2 : AreaP(6,1,6,10)
+  area3 : AreaP(7,1,7,10)
+  areaF : AreaP(1,1,1,1)
+  
+robots
+  robot recolector
+  variables
+    av, ca, f, p, id, idMin : numero
+  comenzar
+    RecibirMensaje(id,robotF)
+    
+    av := PosAv
+    ca := PosCa
+    repetir 9
+      juntarF(f)
+      mover
+    juntarF(f)
+    Pos(av,ca)
+    
+    EnviarMensaje(id,robotF)
+    EnviarMensaje(f,robotF)
+    
+    RecibirMensaje(idMin,robotF)
+    si ~(idMin = id)
+      repetir 9
+        juntarP(p)
+        mover
+      juntarP(p)
+      
+      EnviarMensaje(id,robotF) 
+  fin
+  
+  robot jefe
+  variables
+    f, id, min, idMin : numero
+  comenzar
+    f := 0
+    min := 999
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    
+    repetir 3
+      RecibirMensaje(id,*)
+      si id = 1
+        RecibirMensaje(f,robot1)
+      sino
+        si id = 2
+          RecibirMensaje(f,robot2)
+        sino
+          RecibirMensaje(f,robot3)
+          
+      si f < min
+        min := f
+        idMin := id
+            
+    EnviarMensaje(idMin,robot1)
+    EnviarMensaje(idMin,robot2)
+    EnviarMensaje(idMin,robot3)
+      
+    RecibirMensaje(id,*)
+    Informar('GanadorRobot',id)
+    RecibirMensaje(id,*)
+    
+  fin
+  
+variables
+  robot1 : recolector
+  robot2 : recolector
+  robot3 : recolector
+  robotF : jefe
+comenzar
+  AsignarArea(robot1, area1)
+  AsignarArea(robot2, area2)
+  AsignarArea(robot3, area3)
+  AsignarArea(robotF, areaF)
+  
+  Iniciar(robot1,5,1)
+  Iniciar(robot2,6,1)
+  Iniciar(robot3,7,1)
+  Iniciar(robotF,1,1)
+fin
