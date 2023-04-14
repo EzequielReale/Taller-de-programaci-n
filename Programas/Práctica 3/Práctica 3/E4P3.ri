@@ -1,0 +1,85 @@
+programa E4P3
+procesos
+  proceso levantarF(ES hayFlor:boolean)
+  comenzar
+    si HayFlorEnLaEsquina
+      tomarFlor
+      hayFlor:= V
+  fin
+  proceso esquina(E avIni:numero; E caIni:numero)
+  variables
+    hayFlor: boolean
+  comenzar
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras HayFlorEnLaEsquina
+      hayFlor:= F
+      levantarF(hayFlor)
+      si hayFlor
+        BloquearEsquina(11,11)
+        Pos(11,11)
+        LiberarEsquina(10,10)
+        depositarFlor
+        Pos(avIni,caIni)
+        LiberarEsquina(11,11)
+        BloquearEsquina(10,10)
+        Pos(10,10)
+    Pos(avIni,caIni)
+    LiberarEsquina(10,10)
+  fin
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    EnviarMensaje(3, robot3)
+    EnviarMensaje(4, robot4)
+  fin
+areas
+  esquinas: AreaC (10,10,11,11)
+  reposo1: AreaP (9,9,9,9)
+  reposo2: AreaP (9,10,9,10)
+  reposo3: AreaP (9,11,9,11)
+  reposo4: AreaP (9,12,9,12)
+  reposo5: AreaP (1,1,1,1)
+robots
+  robot florero
+  variables
+    avIni, caIni, id: numero
+  comenzar
+    avIni:= PosAv
+    caIni:= PosCa
+    RecibirMensaje(id, robotJefe)
+    esquina(avIni,caIni)
+    EnviarMensaje(id, robotJefe)
+  fin
+  robot crack
+  variables
+    id: numero
+  comenzar
+    enviarID
+    repetir 4
+      RecibirMensaje(id,*)
+    Informar('ultimo',id)
+  fin
+variables
+  robot1: florero
+  robot2: florero
+  robot3: florero
+  robot4: florero
+  robotJefe: crack
+comenzar
+  AsignarArea (robot1, esquinas)
+  AsignarArea (robot2, esquinas)
+  AsignarArea (robot3, esquinas)
+  AsignarArea (robot4, esquinas)
+  AsignarArea (robot1, reposo1)
+  AsignarArea (robot2, reposo2)
+  AsignarArea (robot3, reposo3)
+  AsignarArea (robot4, reposo4)
+  AsignarArea (robotJefe, reposo5)
+  Iniciar(robot1, 9, 9)
+  Iniciar(robot2, 9, 10)
+  Iniciar(robot3, 9, 11)
+  Iniciar(robot4, 9, 12)
+  Iniciar(robotJefe, 1, 1)
+fin

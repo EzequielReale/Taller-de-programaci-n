@@ -1,0 +1,125 @@
+programa E2P3
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso darseVuelta
+  comenzar
+    repetir 2
+      derecha
+  fin
+  proceso levantarF(ES f: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso levantarP(ES p: numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso escalonFlorero(E alto:numero; E ancho:numero; ES flores:numero)
+  comenzar
+    repetir ancho
+      mover
+    levantarF(flores)
+    derecha
+    repetir alto
+      mover
+    levantarF(flores)
+    izquierda
+  fin
+  proceso escalonPapelero(E alto:numero; E ancho:numero; ES papeles:numero)
+  comenzar
+    repetir alto
+      mover
+    levantarP(papeles)  
+    izquierda
+    repetir ancho
+      mover
+    levantarP(papeles)
+    derecha
+  fin
+  proceso esquina(E id:numero)
+  comenzar
+    BloquearEsquina(17,PosCa)
+    mover
+    EnviarMensaje(id,robotJefe)
+    darseVuelta
+    mover
+    LiberarEsquina(17,PosCa)
+  fin
+areas
+  ciudad1: AreaP (1,1,16,31)
+  ciudad2: AreaP (18,1,33,31)
+  cruce: AreaPC (17,16,17,16)
+  ciudadJefe: AreaP (17,1,17,1)
+robots
+  robot florero
+  variables
+    flores, alto, ancho, id: numero
+  comenzar
+    flores:= 0
+    alto:= 5
+    ancho:= 5
+    id:= 1
+    repetir 5
+      escalonFlorero(alto,ancho,flores)
+      alto:= alto - 1
+      ancho:= ancho - 1
+    derecha 
+    esquina(id)
+    repetir 5
+      alto:= alto + 1
+      ancho:= ancho + 1
+      escalonFlorero(ancho,alto,flores)
+    EnviarMensaje(id,robotJefe)
+  fin
+  robot papelero
+  variables
+    papeles, alto, ancho, id: numero
+  comenzar
+    papeles:= 0
+    alto:= 5
+    ancho:= 5
+    id:= 2
+    repetir 5
+      escalonPapelero(alto,ancho,papeles)
+      alto:= alto - 1
+      ancho:= ancho - 1
+    izquierda 
+    esquina(id)
+    repetir 5
+      alto:= alto + 1
+      ancho:= ancho + 1
+      escalonPapelero(ancho,alto,papeles)
+    EnviarMensaje(id,robotJefe)
+  fin
+  robot crack
+  variables
+    ganador, Brasil: numero
+  comenzar 
+    RecibirMensaje(ganador,*)
+    repetir 3
+      RecibirMensaje(Brasil,*)
+    Informar('Ganador',ganador)
+  fin
+variables
+  robot1: florero
+  robot2: papelero
+  robotJefe: crack
+comenzar
+  AsignarArea (robot1, ciudad1)
+  AsignarArea (robot2, ciudad2)
+  AsignarArea (robot1, cruce)
+  AsignarArea (robot2, cruce)
+  AsignarArea (robotJefe, ciudadJefe)
+  Iniciar(robot1, 1, 1)
+  Iniciar(robot2, 33, 1)
+  Iniciar(robotJefe, 17, 1)
+fin
+

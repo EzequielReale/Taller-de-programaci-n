@@ -1,0 +1,60 @@
+programa P1E3
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso juntarFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso areaImpar
+  comenzar
+    repetir 24
+      juntarFlores
+      mover
+    juntarFlores
+  fin
+  proceso areaPar
+  comenzar
+    repetir 24
+      juntarPapeles
+      mover
+    juntarPapeles
+  fin
+areas
+  area1: AreaP(1,1,1,25)
+  area2: AreaP(1,26,1,50)
+  area3: AreaP(1,51,1,75)
+  area4: AreaP(1,76,1,100)
+robots
+  robot tipoPar
+  comenzar
+    areaPar
+    Pos(1,76)
+    areaPar
+  fin
+  robot tipoImpar
+  comenzar
+    areaImpar
+    Pos(1,51)
+    areaImpar
+  fin
+variables
+  robot1:tipoImpar
+  robot2:tipoPar
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot1,area3)
+  AsignarArea(robot2,area4)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,1,26)
+fin

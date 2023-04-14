@@ -1,0 +1,134 @@
+programa  ejercicio2
+{procesos}
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:=flores+1
+  fin
+  
+  proceso juntarPapeles(E papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  
+  proceso escalonFlores(E lado:numero;E direccion:numero;ES flor:numero)  
+  comenzar
+    repetir lado
+      mover  
+    repetir direccion
+      derecha
+    juntarFlores(flor)
+    repetir lado
+      mover
+    repetir 3
+      derecha
+  fin
+  
+  proceso escalonPapel(E lado:numero;E direccion:numero;ES papel:numero)  
+  comenzar
+    repetir lado
+      mover  
+    repetir direccion
+      derecha
+    juntarPapeles(papel)
+    repetir lado
+      mover
+    derecha
+  fin
+  
+ {areas}
+areas
+  ar1: AreaP(1,1,15,99)
+  ar2: AreaP(17,1,31,99) 
+  ar3: AreaPC(16,16,16,16)
+  ar4: AreaP(99,1,99,1)
+robots
+  robot florero
+  variables
+    flor:numero
+    lado:numero
+    yoSoy:numero
+  comenzar
+    flor:=0
+    lado:=5
+    RecibirMensaje(yoSoy,robot3)
+    repetir 4
+      escalonFlores(lado,1,flor)
+      lado:=lado - 1
+    mover
+    juntarFlores(flor)
+    derecha
+    BloquearEsquina(13,13)
+    mover
+    EnviarMensaje(yoSoy,robot3)          
+    Pos(15,16)
+    LiberarEsquina(13,13)
+    repetir 2
+      derecha
+    lado:=2
+    repetir 4
+      escalonFlores(lado,1,flor)
+      lado:=lado+1    
+  fin 
+           
+  robot papelero
+  variables
+    papel:numero
+    lado:numero
+    yoSoy:numero
+  comenzar
+    papel:=0
+    lado:=5
+    RecibirMensaje(yoSoy,robot3)
+    repetir 4
+      escalonPapel(lado,3,papel)
+      lado:=lado - 1
+    mover
+    juntarPapeles(papel)
+    repetir 3
+      derecha
+    BloquearEsquina(13,13)
+    mover
+    EnviarMensaje(yoSoy,robot3)          
+    Pos(17,16)
+    LiberarEsquina(13,13)
+    repetir 2
+      derecha
+    lado:=2
+    repetir 4
+      escalonPapel(lado,3,papel)
+      lado:=lado+1    
+  fin 
+  
+  robot jefe
+  variables
+    rob:numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    RecibirMensaje(rob,*)
+    si(rob=1)
+      Informar(rob)
+    sino
+      Informar(rob)
+    RecibirMensaje(rob,*)
+  fin
+
+variables
+  robot1: florero
+  robot2: papelero
+  robot3: jefe
+comenzar
+  AsignarArea(robot1,ar1)
+  AsignarArea(robot2,ar2)
+  AsignarArea(robot3,ar4)
+  AsignarArea(robot1,ar3)
+  AsignarArea(robot2,ar3)  
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,31,1)
+  Iniciar(robot3,99,1)
+fin

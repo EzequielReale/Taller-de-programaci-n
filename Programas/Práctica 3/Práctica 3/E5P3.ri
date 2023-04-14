@@ -1,0 +1,103 @@
+programa E5P3
+procesos
+  proceso agarrarPapel(ES habiaPapel:boolean)
+  variables
+    avAct, caAct: numero
+  comenzar
+    avAct:= PosAv
+    caAct:= PosCa
+    BloquearEsquina(11,11)
+    Pos(11,11)
+    si HayPapelEnLaEsquina
+      tomarPapel
+      habiaPapel:= V
+    sino
+      habiaPapel:= F
+    Pos(avAct,caAct)
+    LiberarEsquina(11,11)
+  fin
+  proceso caminar(ES pasos:numero)
+  variables
+    habiaPapel: boolean
+  comenzar
+    habiaPapel:= V
+    mientras (habiaPapel) & (PosCa < 99)
+      agarrarPapel(habiaPapel)
+      si habiaPapel
+        depositarPapel
+        mover
+        pasos:= pasos + 1
+  fin
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    EnviarMensaje(3, robot3)
+    EnviarMensaje(4, robot4)
+  fin
+  proceso maximo(E pasos:numero; E id:numero; ES maxPasos:numero; ES idMax:numero)
+  comenzar
+    si (pasos > maxPasos)
+      maxPasos:= pasos
+      idMax:= id
+  fin
+areas
+  avenida1: AreaP (4,1,4,100)
+  avenida2: AreaP (6,1,6,100)
+  avenida3: AreaP (8,1,8,100)
+  avenida4: AreaP (10,1,10,100)
+  fuente: AreaC (11,11,11,11)
+  reposo: AreaP (1,1,1,1)
+robots
+  robot papelero
+  variables
+    pasos,id: numero
+  comenzar
+    pasos:= 0
+    RecibirMensaje(id, robotJefe)
+    caminar(pasos)
+    EnviarMensaje(id, robotJefe)
+    EnviarMensaje(pasos, robotJefe)
+  fin
+  robot crack
+  variables
+    id, pasos, idMax, maxPasos: numero
+  comenzar
+    maxPasos:= -1
+    enviarID
+    RecibirMensaje(id, robot1)
+    RecibirMensaje(pasos, robot1)
+    maximo(pasos,id,maxPasos,idMax)
+    RecibirMensaje(id, robot2)
+    RecibirMensaje(pasos, robot2)
+    maximo(pasos,id,maxPasos,idMax)
+    RecibirMensaje(id, robot3)
+    RecibirMensaje(pasos, robot3)
+    maximo(pasos,id,maxPasos,idMax)
+    RecibirMensaje(id, robot4)
+    RecibirMensaje(pasos, robot4)
+    maximo(pasos,id,maxPasos,idMax)
+    Informar('MayorDistanciaID',id)
+  fin
+variables
+  robot1: papelero
+  robot2: papelero
+  robot3: papelero
+  robot4: papelero
+  robotJefe: crack
+comenzar
+  AsignarArea (robot1, avenida1)
+  AsignarArea (robot2, avenida2)
+  AsignarArea (robot3, avenida3)
+  AsignarArea (robot4, avenida4)
+  AsignarArea (robot1, fuente)
+  AsignarArea (robot2, fuente)
+  AsignarArea (robot3, fuente)
+  AsignarArea (robot4, fuente)
+  AsignarArea (robotJefe, reposo)
+  Iniciar(robot1, 4, 1)
+  Iniciar(robot2, 6, 1)
+  Iniciar(robot3, 8, 1)
+  Iniciar(robot4, 10, 1)
+  Iniciar(robotJefe, 1, 1)
+fin

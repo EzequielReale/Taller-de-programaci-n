@@ -1,0 +1,82 @@
+programa E3P2
+procesos
+  proceso levantarF(ES flores: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:= flores + 1
+  fin
+  proceso levantarP(ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+
+areas
+  ciudad1: AreaP (1, 1, 1, 10)
+  ciudad2: AreaP (1, 11, 1, 20)
+  ciudad3: AreaP (5, 1, 5, 10)
+  ciudad4: AreaP (5, 11, 5, 20)
+
+robots
+  robot equipoAL
+  variables
+    flores: numero
+  comenzar
+    flores:= 0
+    repetir 9
+      levantarF(flores)
+      mover
+    levantarF(flores)
+    EnviarMensaje(flores,A2)
+  fin
+  robot equipoAH
+  variables
+    flores: numero
+  comenzar
+    RecibirMensaje(flores, A1)
+    repetir 9
+      levantarF(flores)
+      mover
+    levantarF(flores)
+    Informar('Flores',flores)
+  fin
+  robot equipoBL
+  variables
+    papeles: numero
+  comenzar
+    papeles:= 0
+    repetir 9
+      levantarP(papeles)
+      mover
+    levantarP(papeles)
+    EnviarMensaje(papeles,B2)
+  fin
+  robot equipoBH
+  variables
+    papeles: numero
+  comenzar
+    RecibirMensaje(papeles,B1)
+    repetir 9
+      levantarP(papeles)
+      mover
+    levantarP(papeles)
+    Informar('Papeles',papeles)
+  fin
+
+variables
+  A1: equipoAL
+  A2: equipoAH
+  B1: equipoBL
+  B2: equipoBH
+comenzar
+  AsignarArea (A1, ciudad1)
+  AsignarArea (A2, ciudad2)
+  AsignarArea (B1, ciudad3)
+  AsignarArea (B2, ciudad4)
+  Iniciar(A1, 1, 1)
+  Iniciar(A2, 1, 11)
+  Iniciar(B1, 5, 1)
+  Iniciar(B2, 5, 11)
+fin

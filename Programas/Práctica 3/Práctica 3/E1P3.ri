@@ -1,0 +1,90 @@
+programa E1P3
+procesos
+  proceso levantarF(ES f: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso levantarP(ES p: numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+  fin
+areas
+  cuadranteF: AreaPC (1,1,5,10)
+  cuadranteP: AreaPC (6,1,10,9)
+  reposo1: AreaP (8,10,8,10)
+  reposo2: AreaP (9,10,9,10)
+  reposo3: AreaP (11,10,11,10)
+  reposo4: AreaP (12,10,12,10)
+  zona10: AreaPC (10,10,10,10)
+robots
+  robot florero
+  variables
+    flores, avIni, caIni, avenida, calle: numero
+  comenzar
+    avIni:= PosAv
+    caIni:= PosCa
+    flores:= 0
+    repetir 5
+      Random(avenida,1,5)
+      Random(calle,1,10)
+      BloquearEsquina(avenida,calle)
+      Pos(avenida,calle)
+      levantarF(flores)
+      Pos(avIni,caIni)
+      LiberarEsquina(avenida,calle)    
+    repetir flores  
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarFlor
+      Pos(avIni,caIni)
+      LiberarEsquina(10,10)
+  fin
+  robot papelero
+  variables
+    papeles, avIni, caIni, avenida, calle: numero
+  comenzar
+    avIni:= PosAv
+    caIni:= PosCa
+    papeles:= 0
+    repetir 3
+      Random(avenida,6,10)
+      Random(calle,1,9)
+      BloquearEsquina(avenida,calle)
+      Pos(avenida,calle)
+      levantarP(papeles)
+      Pos(avIni,caIni)
+      LiberarEsquina(avenida,calle)    
+    repetir papeles
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarPapel
+      Pos(avIni,caIni)
+      LiberarEsquina(10,10)
+  fin
+variables
+  robot1: florero
+  robot2: florero
+  robot3: papelero
+  robot4: papelero
+comenzar
+  AsignarArea (robot1, cuadranteF)
+  AsignarArea (robot2, cuadranteF)
+  AsignarArea (robot3, cuadranteP)
+  AsignarArea (robot4, cuadranteP)
+  AsignarArea (robot1, reposo1)
+  AsignarArea (robot2, reposo2)
+  AsignarArea (robot3, reposo3)
+  AsignarArea (robot4, reposo4)
+  AsignarArea (robot1, zona10)
+  AsignarArea (robot2, zona10)
+  AsignarArea (robot3, zona10)
+  AsignarArea (robot4, zona10)
+  Iniciar(robot1, 8, 10)
+  Iniciar(robot2, 9, 10)
+  Iniciar(robot3, 11, 10)
+  Iniciar(robot4, 12, 10)
+fin

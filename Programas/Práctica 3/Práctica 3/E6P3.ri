@@ -1,0 +1,256 @@
+programa ej6TD
+procesos
+  proceso juntarFlores (ES cantFlo:numero)
+  comenzar  
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlo:=cantFlo+1
+  fin
+   
+  proceso juntarPapeles (ES cantPap:numero)
+  comenzar  
+    mientras (HayPapelEnLaEsquina)    
+      tomarPapel
+      cantPap:=cantPap+1
+  fin
+
+  proceso tramoFlores(E pasos: numero;ES flores: numero)
+  comenzar
+    repetir pasos
+      juntarFlores(flores)
+      mover
+  fin
+
+  proceso tramoPapeles(E pasos: numero;ES papeles: numero)
+  comenzar
+    repetir pasos
+      juntarPapeles(papeles)
+      mover
+  fin
+
+  proceso tramoFloresYPapeles(E pasos: numero;ES flores: numero;ES papeles: numero)
+  comenzar
+    repetir pasos
+      juntarFlores(flores)
+      juntarPapeles(papeles)
+      mover
+  fin
+
+  proceso bloquearEsquinaFlores(E av: numero;E ca: numero;ES flores:numero)
+  comenzar
+    juntarFlores(flores)
+    BloquearEsquina(av,ca)
+    mover
+    juntarFlores(flores)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+
+  proceso bloquearEsquinaPapeles(E av: numero;E ca: numero;ES papeles:numero)
+  comenzar
+    juntarPapeles(papeles)
+    BloquearEsquina(av,ca)
+    mover
+    juntarPapeles(papeles)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+
+  proceso bloquearEsquinaFloresYPapeles(E av: numero;E ca: numero;ES flores:numero;ES papeles:numero)
+  comenzar
+    juntarFlores(flores)
+    juntarPapeles(papeles)
+    BloquearEsquina(av,ca)
+    mover
+    juntarFlores(flores)
+    juntarPapeles(papeles)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+areas
+  cuadrante: AreaPC(2,2,16,16)
+  sendero1: AreaP(1,20,100,20)
+  sendero2: AreaP(1,21,100,21)
+  sendero3: AreaP(1,22,100,22)
+  areaFisca: AreaP(1,1,1,1)
+robots
+  robot florero
+  variables
+    flores: numero
+    av: numero
+    ca: numero
+    id: numero
+  comenzar
+    av := 5
+    ca := 8
+
+    tramoFlores(6,flores)
+    derecha
+    repetir 2
+      tramoFlores(2,flores)
+      bloquearEsquinaFlores(av,ca,flores)
+      tramoFlores(2,flores)
+      derecha
+      av := 8
+      ca := 5   
+    tramoFlores(6,flores)
+    derecha
+ 
+    RecibirMensaje(id,Juan)
+    EnviarMensaje(id,Juan)
+    RecibirMensaje(ca,Juan)
+    Pos(1,ca)
+    derecha
+    mientras ((PosAv < 100) & (flores > 0))
+      depositarFlor
+      flores := flores - 1
+      mover
+  fin
+  robot papeleroyflorero
+  variables
+    flores: numero
+    papeles: numero
+    id: numero
+    ca: numero
+    ok: boolean
+  comenzar
+    tramoFloresYPapeles(2,flores,papeles)
+    bloquearEsquinaFloresYPapeles(5,8,flores,papeles)
+    tramoFloresYPapeles(6,flores,papeles)
+    derecha
+    tramoFloresYPapeles(3,flores,papeles)
+    bloquearEsquinaFloresYPapeles(9,15,flores,papeles)
+    tramoFloresYPapeles(5,flores,papeles)
+    derecha
+    tramoFloresYPapeles(5,flores,papeles)
+    bloquearEsquinaFloresYPapeles(15,9,flores,papeles)
+    tramoFloresYPapeles(3,flores,papeles)
+    derecha
+    tramoFloresYPapeles(6,flores,papeles)
+    bloquearEsquinaFloresYPapeles(8,5,flores,papeles)
+    tramoFloresYPapeles(2,flores,papeles)
+    derecha
+
+    RecibirMensaje(id,Juan)
+    EnviarMensaje(id,Juan)
+    RecibirMensaje(ca,Juan)
+    Pos(1,ca)
+    derecha
+    ok := V
+    mientras ((PosAv < 100) & (ok))
+      si (flores > 0) & (papeles > 0)
+        depositarFlor
+        depositarPapel
+        papeles := papeles - 1
+        flores := flores - 1
+        mover
+      sino
+        si (flores > 0)
+          depositarFlor
+          flores := flores - 1
+          mover
+        sino
+          si (papeles > 0)
+            depositarPapel
+            papeles := papeles - 1
+            mover
+          sino
+            ok := F      
+  fin
+  robot papelero
+  variables
+    papeles: numero
+    id: numero
+    ca: numero
+  comenzar
+    tramoPapeles(5,papeles)
+    bloquearEsquinaPapeles(9,15,papeles)
+    derecha
+    repetir 2
+      tramoPapeles(7,papeles)
+      derecha
+    bloquearEsquinaPapeles(15,9,papeles)
+    tramoPapeles(5,papeles)
+    derecha
+
+    RecibirMensaje(id,Juan)
+    EnviarMensaje(id,Juan)
+    RecibirMensaje(ca,Juan)
+    Pos(1,ca)
+    derecha
+    mientras ((PosAv < 100) & (papeles > 0))
+      depositarPapel
+      papeles := papeles - 1
+      mover
+  fin
+  robot fiscalizador
+  variables
+    id,idPri,idSeg,idTer: numero
+    ca: numero
+  comenzar
+    EnviarMensaje(1,tomas)
+    EnviarMensaje(2,alan)
+    EnviarMensaje(3,luciano)
+    RecibirMensaje(idPri,*)
+    RecibirMensaje(idSeg,*)
+    RecibirMensaje(idTer,*)   
+    
+    si (idPri=1)
+      EnviarMensaje(20,tomas)
+    sino 
+      si(idPri=2)
+        EnviarMensaje(20,alan)
+      sino 
+        si(idPri=3)
+          EnviarMensaje(20,luciano)
+
+
+
+    si (idSeg=1)
+      EnviarMensaje(21,tomas)
+    sino 
+      si(idSeg=2)
+        EnviarMensaje(21,alan)
+      sino 
+        si(idSeg=3)
+          EnviarMensaje(21,luciano)
+
+    si (idTer=1)
+      EnviarMensaje(22,tomas)
+    sino 
+      si(idTer=2)
+        EnviarMensaje(22,alan)
+      sino 
+        si(idTer=3)
+          EnviarMensaje(22,luciano)
+    
+  fin
+variables
+  tomas:florero
+  alan:papeleroyflorero
+  luciano:papelero
+  Juan:fiscalizador
+comenzar
+  AsignarArea(tomas,cuadrante)
+  AsignarArea(alan,cuadrante)
+  AsignarArea(luciano,cuadrante)
+ 
+  AsignarArea(Juan,areaFisca)
+  
+  AsignarArea(tomas,sendero1)
+  AsignarArea(tomas,sendero2)
+  AsignarArea(tomas,sendero3)
+  
+  AsignarArea(alan,sendero1)
+  AsignarArea(alan,sendero2)
+  AsignarArea(alan,sendero3)
+  
+  AsignarArea(luciano,sendero1)
+  AsignarArea(luciano,sendero2)
+  AsignarArea(luciano,sendero3)
+  
+  Iniciar(tomas,2,2)
+  Iniciar(alan,5,5)
+  Iniciar(luciano,9,9)
+  Iniciar(Juan,1,1)
+fin

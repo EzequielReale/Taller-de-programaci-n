@@ -1,0 +1,7 @@
+1- se choca
+2- se choca
+3- en la mayoría anda, pero podría chocar
+4- no se inicia el robot tipo 2
+5- no se choca
+6- robot1 no tiene acceso a pos 75,78
+7- anda

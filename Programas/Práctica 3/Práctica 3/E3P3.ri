@@ -1,0 +1,140 @@
+programa E3P3
+procesos
+  proceso levantarF(ES f: numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso esquina(E av:numero; E ca:numero; E avIni:numero; E caIni:numero; ES flores:numero)
+  comenzar
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    mientras HayFlorEnLaEsquina
+      levantarF(flores)
+      Pos(avIni,caIni)
+      LiberarEsquina(av,ca)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+    Pos(avIni,caIni)
+    LiberarEsquina(av,ca)
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+  fin
+  proceso enviarAvCa
+  variables
+    av, ca: numero
+  comenzar
+    Random(av,2,10)
+    Random(ca,2,10)
+    EnviarMensaje(av,robot1)
+    EnviarMensaje(ca,robot1)
+    Random(av,2,10)
+    Random(ca,2,10)
+    EnviarMensaje(av,robot2)
+    EnviarMensaje(ca,robot2)
+    Random(av,2,10)
+    Random(ca,2,10)
+    EnviarMensaje(av,robot3)
+    EnviarMensaje(ca,robot3)
+    Random(av,2,10)
+    Random(ca,2,10)
+    EnviarMensaje(av,robot4)
+    EnviarMensaje(ca,robot4)
+  fin
+  proceso maximo(E flores:numero; E id:numero; ES max:numero; ES idMax:numero)
+  comenzar
+    si (flores > max)
+      max:= flores
+      idMax:= id
+  fin
+  proceso recibirGanador(ES idMax:numero; ES max:numero)
+  variables
+    id, flores:numero
+  comenzar
+    RecibirMensaje(id, robot1)
+    RecibirMensaje(flores, robot1)
+    maximo(flores,id,max,idMax)
+    RecibirMensaje(id, robot2)
+    RecibirMensaje(flores, robot2)
+    maximo(flores,id,max,idMax)
+    RecibirMensaje(id, robot3)
+    RecibirMensaje(flores, robot3)
+    maximo(flores,id,max,idMax)
+    RecibirMensaje(id, robot4)
+    RecibirMensaje(flores, robot4)
+    maximo(flores,id,max,idMax)
+  fin
+  proceso informarGanador(E idMax:numero; E max:numero)
+  comenzar
+    si (idMax = 1)
+      Informar('robot1',max)
+    sino
+      si (idMax = 2)
+        Informar('robot2',max)
+      sino
+        si (idMax = 3)
+          Informar('robot3',max)
+        sino
+          si (idMax = 4)
+            Informar('robot4',max)
+  fin
+areas
+  cuadrante: AreaPC (2,2,10,10)
+  reposo1: AreaP (2,1,2,1)
+  reposo2: AreaP (3,1,3,1)
+  reposo3: AreaP (4,1,4,1)
+  reposo4: AreaP (5,1,5,1)
+  reposo5: AreaP (1,1,1,1)
+robots
+  robot florero
+  variables
+    flores, avIni, caIni, av, ca, id: numero
+  comenzar
+    flores:= 0
+    avIni:= PosAv
+    caIni:= PosCa
+    RecibirMensaje(id, robotJefe)
+    RecibirMensaje(av, robotJefe)
+    RecibirMensaje(ca, robotJefe)
+    esquina(av,ca,avIni,caIni,flores)
+    EnviarMensaje(id, robotJefe)
+    EnviarMensaje(flores, robotJefe)
+  fin
+  robot crack
+  variables
+    idMax,max: numero
+  comenzar
+    max:= -1
+    enviarId
+    enviarAvCa
+    recibirGanador(idMax,max)
+    informarGanador(idMax,max)
+  fin
+variables
+  robot1: florero
+  robot2: florero
+  robot3: florero
+  robot4: florero
+  robotJefe: crack
+comenzar
+  AsignarArea (robot1, cuadrante)
+  AsignarArea (robot2, cuadrante)
+  AsignarArea (robot3, cuadrante)
+  AsignarArea (robot4, cuadrante)
+  AsignarArea (robot1, reposo1)
+  AsignarArea (robot2, reposo2)
+  AsignarArea (robot3, reposo3)
+  AsignarArea (robot4, reposo4)
+  AsignarArea (robotJefe, reposo5)
+  Iniciar(robot1, 2, 1)
+  Iniciar(robot2, 3, 1)
+  Iniciar(robot3, 4, 1)
+  Iniciar(robot4, 5, 1)
+  Iniciar(robotJefe, 1, 1)
+fin

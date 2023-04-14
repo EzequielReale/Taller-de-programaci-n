@@ -1,0 +1,54 @@
+programa E1P2b
+procesos
+  proceso realizarRecorrido (ES flores: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:= flores +1
+    repetir 9
+      mover
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+        flores:= flores + 1
+  fin
+areas
+  ciudad1: AreaP (1, 1, 1, 10)
+  ciudad2: AreaP (2, 11, 2, 20)
+  ciudad3: AreaP(2,1,2,1)
+robots
+  robot tipo1
+  variables
+    flores: numero
+  comenzar
+    flores:= 0
+    realizarRecorrido(flores)
+    EnviarMensaje (flores, robot3)
+  fin
+  robot tipo2
+  variables
+    flores1: numero
+    flores2: numero
+  comenzar
+    RecibirMensaje(flores1, robot1)
+    RecibirMensaje(flores2, robot2)
+    si (flores1 > flores2)
+      Informar ('Robot1' , flores1 - flores2)
+    sino
+      si (flores1 < flores2)
+        Informar ('Robot2' , flores2 - flores1)
+      sino
+        si (flores1 = flores2)
+          Informar ('Empate', 0)
+  fin
+variables
+  robot1: tipo1
+  robot2: tipo1
+  robot3: tipo2
+comenzar
+  AsignarArea (robot1, ciudad1)
+  AsignarArea (robot2, ciudad2)
+  AsignarArea (robot3, ciudad3)
+  Iniciar(robot1, 1, 1)
+  Iniciar(robot2, 2, 11)
+  Iniciar(robot3, 2, 1)
+fin

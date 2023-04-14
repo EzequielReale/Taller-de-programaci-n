@@ -1,0 +1,39 @@
+programa P1E1
+procesos
+  proceso juntarFlores (ES sinFlor:numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+    sino
+      sinFlor:= sinFlor + 1
+  fin
+  proceso dejarFlores(ES depositadas:numero)
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+      depositadas:= depositadas + 1
+  fin
+areas
+  ciudad: AreaC(1,1,7,100)
+robots
+  robot robot1
+  variables
+    sinFlor, depositadas: numero
+  comenzar
+    repetir 3
+      depositadas:= 0
+      sinFlor:= 0
+      repetir 99
+        juntarFlores(sinFlor)
+        mover
+      dejarFlores(depositadas)
+      Informar(depositadas,sinFlor)
+      Pos(PosAv+2,1)
+  fin
+variables
+  R-info: robot1
+comenzar
+  AsignarArea(R-info,ciudad)
+  Iniciar(R-info,1,1)
+fin

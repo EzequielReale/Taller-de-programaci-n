@@ -1,0 +1,86 @@
+programa P1E2
+procesos
+  proceso juntarPapeles (ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+areas
+  tramo1: AreaP (10,11,10,29)
+  tramo2: AreaP (11,30,29,30)
+  tramo3: AreaP (30,11,30,29)
+  tramo4: AreaP (11,10,29,10)
+  vertice1: AreaPC (10,10,10,10)
+  vertice2: AreaPC (10,30,10,30)
+  vertice3: AreaPC (30,30,30,30)
+  vertice4: AreaPC (30,10,30,10)
+robots
+  robot tipo1
+  variables
+    papeles: numero
+  comenzar
+    papeles:= 0
+    repetir 20
+      juntarPapeles(papeles)
+      mover
+    Informar(papeles)
+  fin
+  robot tipo2
+  variables
+    papeles: numero
+  comenzar
+    derecha
+    papeles:= 0
+    repetir 20
+      juntarPapeles(papeles)
+      mover
+    Informar(papeles)
+  fin
+  robot tipo3
+  variables
+    papeles: numero
+  comenzar
+    repetir 2
+      derecha
+    papeles:= 0
+    repetir 20
+      juntarPapeles(papeles)
+      mover
+    Informar(papeles)
+  fin
+  robot tipo4
+  variables
+    papeles: numero
+  comenzar
+    repetir 3
+      derecha
+    papeles:= 0
+    repetir 20
+      juntarPapeles(papeles)
+      mover
+    Informar(papeles)
+  fin
+variables
+  robot1:tipo1
+  robot2:tipo2
+  robot3:tipo3
+  robot4:tipo4
+comenzar
+  AsignarArea(robot1,tramo1)
+  AsignarArea(robot2,tramo2)
+  AsignarArea(robot3,tramo3)
+  AsignarArea(robot4,tramo4)
+  AsignarArea(robot1,vertice1)
+  AsignarArea(robot1,vertice2)
+  AsignarArea(robot2,vertice2)
+  AsignarArea(robot2,vertice3)
+  AsignarArea(robot3,vertice3)
+  AsignarArea(robot3,vertice4)
+  AsignarArea(robot4,vertice4)
+  AsignarArea(robot4,vertice1)
+  Iniciar(robot1,10,10)
+  Iniciar(robot2,10,30)
+  Iniciar(robot3,30,30)
+  Iniciar(robot4,30,10)
+fin
